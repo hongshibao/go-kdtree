@@ -1,5 +1,9 @@
 package kdtree
 
+import (
+	"github.com/hongshibao/go-algo"
+)
+
 type Point interface {
 	Dim() int
 	GetValue(dim int) float64
@@ -17,7 +21,7 @@ func NewKDTree(points []Point) *KDTree {
 	return ret
 }
 
-func newKDTree(points []Point, depth int) *KDTreeNode {
+func createKDTree(points []Point, depth int) *KDTreeNode {
 	if len(points) == 0 {
 		return nil
 	}
@@ -34,9 +38,34 @@ func newKDTree(points []Point, depth int) *KDTreeNode {
 	return nil
 }
 
-func selectSplittingPoint(points []Point, depth int) Point {
-	// TODO
-	return nil
+type selectionHelper struct {
+	axis   int
+	points []Point
+}
+
+func (h *selectionHelper) Len() int {
+	return len(h.points)
+}
+
+func (h *selectionHelper) Less(i, j int) bool {
+	return h.points[i].GetValue(h.axis) < h.points[j].GetValue(h.axis)
+}
+
+func (h *selectionHelper) Swap(i, j int) {
+	h.points[i], h.points[j] = h.points[j], h.points[i]
+}
+
+func selectSplittingPoint(points []Point, axis int) Point {
+	helper := &selectionHelper{
+		axis:   axis,
+		points: points,
+	}
+	mid := len(points)/2 + 1
+	err := algo.QuickSelect(helper, mid)
+	if err != nil {
+		return nil
+	}
+	return points[mid-1]
 }
 
 type KDTreeNode struct {
