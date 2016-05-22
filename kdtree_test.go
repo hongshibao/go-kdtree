@@ -87,11 +87,11 @@ func TestKNN(t *testing.T) {
 		ans := tree.KNN(NewEuclideanPoint(0.0, 0.0, 0.0), 3)
 		checkKNNResult(t, ans, p1, p5, p6)
 		ans = tree.KNN(NewEuclideanPoint(0.0, 0.0, 0.0), 4)
-		if ans[3] != p2 && ans[3] != p3 && ans[3] != p4 {
+		if !equal(ans[3], p2) && !equal(ans[3], p3) && !equal(ans[3], p4) {
 			t.Error("KNN results are wrong")
 		}
 		ans = tree.KNN(NewEuclideanPoint(0.0, 0.0, 0.0), 7)
-		if ans[6] != p7 {
+		if !equal(ans[6], p7) {
 			t.Error("KNN results are wrong")
 		}
 	}
