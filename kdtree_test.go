@@ -60,16 +60,48 @@ func checkKNNResult(t *testing.T, ans []Point, points ...Point) {
 
 func TestKNN(t *testing.T) {
 	// case 1
-	points := make([]Point, 0)
-	p1 := NewEuclideanPoint(0.0, 0.0, 0.0)
-	p2 := NewEuclideanPoint(0.0, 0.0, 1.0)
-	p3 := NewEuclideanPoint(0.0, 1.0, 0.0)
-	p4 := NewEuclideanPoint(1.0, 0.0, 0.0)
-	points = append(points, p1)
-	points = append(points, p2)
-	points = append(points, p3)
-	points = append(points, p4)
-	tree := NewKDTree(points)
-	ans := tree.KNN(NewEuclideanPoint(0.0, 0.0, 0.1), 2)
-	checkKNNResult(t, ans, p1, p2)
+	{
+		p1 := NewEuclideanPoint(0.0, 0.0, 0.0)
+		p2 := NewEuclideanPoint(0.0, 0.0, 1.0)
+		p3 := NewEuclideanPoint(0.0, 1.0, 0.0)
+		p4 := NewEuclideanPoint(1.0, 0.0, 0.0)
+		points := make([]Point, 0)
+		points = append(points, p1)
+		points = append(points, p2)
+		points = append(points, p3)
+		points = append(points, p4)
+		tree := NewKDTree(points)
+		ans := tree.KNN(NewEuclideanPoint(0.0, 0.0, 0.1), 2)
+		checkKNNResult(t, ans, p1, p2)
+	}
+	// case 2
+	{
+		p1 := NewEuclideanPoint(0.0, 0.0, 0.0)
+		p2 := NewEuclideanPoint(0.0, 0.0, 1.0)
+		p3 := NewEuclideanPoint(0.0, 1.0, 0.0)
+		p4 := NewEuclideanPoint(1.0, 0.0, 0.0)
+		p5 := NewEuclideanPoint(0.0, 0.0, 0.0)
+		p6 := NewEuclideanPoint(0.0, 0.0, 0.1)
+		p7 := NewEuclideanPoint(1.0, 1.0, 1.0)
+		points := make([]Point, 0)
+		points = append(points, p1)
+		points = append(points, p2)
+		points = append(points, p3)
+		points = append(points, p4)
+		points = append(points, p5)
+		points = append(points, p6)
+		points = append(points, p7)
+		tree := NewKDTree(points)
+		ans := tree.KNN(NewEuclideanPoint(0.0, 0.0, 0.0), 3)
+		checkKNNResult(t, ans, p1, p5, p6)
+		ans = tree.KNN(NewEuclideanPoint(0.0, 0.0, 0.0), 4)
+		if ans[3] != p2 && ans[3] != p3 && ans[3] != p4 {
+			t.Error("KNN results are wrong")
+		}
+		ans = tree.KNN(NewEuclideanPoint(0.0, 0.0, 0.0), 7)
+		if ans[6] != p7 {
+			t.Error("KNN results are wrong")
+		}
+	}
+
 }
