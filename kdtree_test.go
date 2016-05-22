@@ -21,7 +21,8 @@ func (p *EuclideanPoint) GetValue(dim int) float64 {
 func (p *EuclideanPoint) Distance(ep Point) float64 {
 	var ret float64
 	for i := 0; i < len(p.vec); i++ {
-		ret += p.GetValue(i) * ep.GetValue(i)
+		tmp := p.GetValue(i) - ep.GetValue(i)
+		ret += tmp * tmp
 	}
 	return ret
 }
@@ -45,7 +46,8 @@ func TestKNN(t *testing.T) {
 	points = append(points, NewEuclideanPoint(0.0, 1.0, 0.0))
 	points = append(points, NewEuclideanPoint(1.0, 0.0, 0.0))
 	tree := NewKDTree(points)
-	ans := tree.KNN(NewEuclideanPoint(0.0, 0.0, 0.1), 1)
+	ans := tree.KNN(NewEuclideanPoint(0.0, 0.0, 0.1), 3)
+	fmt.Println("len of ans:", len(ans))
 	for _, p := range ans {
 		for i := 0; i < p.Dim(); i++ {
 			fmt.Print(p.GetValue(i), ", ")

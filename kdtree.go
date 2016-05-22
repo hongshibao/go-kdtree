@@ -107,7 +107,7 @@ func createKDTree(points []Point, depth int) *kdTreeNode {
 		return nil
 	}
 	ret.splittingPoint = points[idx]
-	ret.leftChild = createKDTree(points[0:idx-1], depth+1)
+	ret.leftChild = createKDTree(points[0:idx], depth+1)
 	ret.rightChild = createKDTree(points[idx+1:len(points)], depth+1)
 	return ret
 }
