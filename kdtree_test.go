@@ -1,7 +1,6 @@
 package kdtree
 
 import (
-	"fmt"
 	"math"
 	"testing"
 )
@@ -39,19 +38,38 @@ func NewEuclideanPoint(vals ...float64) *EuclideanPoint {
 	return ret
 }
 
-func TestKNN(t *testing.T) {
-	points := make([]Point, 0)
-	points = append(points, NewEuclideanPoint(0.0, 0.0, 0.0))
-	points = append(points, NewEuclideanPoint(0.0, 0.0, 1.0))
-	points = append(points, NewEuclideanPoint(0.0, 1.0, 0.0))
-	points = append(points, NewEuclideanPoint(1.0, 0.0, 0.0))
-	tree := NewKDTree(points)
-	ans := tree.KNN(NewEuclideanPoint(0.0, 0.0, 0.1), 3)
-	fmt.Println("len of ans:", len(ans))
-	for _, p := range ans {
-		for i := 0; i < p.Dim(); i++ {
-			fmt.Print(p.GetValue(i), ", ")
+func equal(p1 Point, p2 Point) bool {
+	for i := 0; i < p1.Dim(); i++ {
+		if p1.GetValue(i) != p2.GetValue(i) {
+			return false
 		}
-		fmt.Println()
 	}
+	return true
+}
+
+func checkKNNResult(t *testing.T, ans []Point, points ...Point) {
+	if len(ans) != len(points) {
+		t.Fatal("KNN result length error")
+	}
+	for i := 0; i < len(ans); i++ {
+		if !equal(ans[i], points[i]) {
+			t.Error("KNN results are wrong")
+		}
+	}
+}
+
+func TestKNN(t *testing.T) {
+	// case 1
+	points := make([]Point, 0)
+	p1 := NewEuclideanPoint(0.0, 0.0, 0.0)
+	p2 := NewEuclideanPoint(0.0, 0.0, 1.0)
+	p3 := NewEuclideanPoint(0.0, 1.0, 0.0)
+	p4 := NewEuclideanPoint(1.0, 0.0, 0.0)
+	points = append(points, p1)
+	points = append(points, p2)
+	points = append(points, p3)
+	points = append(points, p4)
+	tree := NewKDTree(points)
+	ans := tree.KNN(NewEuclideanPoint(0.0, 0.0, 0.1), 2)
+	checkKNNResult(t, ans, p1, p2)
 }
