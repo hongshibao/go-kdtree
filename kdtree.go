@@ -1,6 +1,8 @@
 package kdtree
 
 import (
+	"container/heap"
+
 	"github.com/hongshibao/go-algo"
 )
 
@@ -8,6 +10,7 @@ type Point interface {
 	Dim() int
 	GetValue(dim int) float64
 	Distance(p Point) float64
+	PlaneDistance(val float64, dim int) float64
 }
 
 type kdTreeNode struct {
@@ -26,9 +29,54 @@ func (t *KDTree) Dim() int {
 	return t.dim
 }
 
-func (t *KDTree) KNN(k int) []Point {
-	// TODO
-	return nil
+func (t *KDTree) KNN(target Point, k int) []Point {
+	hp := &kNNHeapHelper{}
+	t.search(t.root, hp, target, k)
+	ret := make([]Point, 0, hp.Len())
+	for hp.Len() > 0 {
+		item := heap.Pop(hp).(*kNNHeapNode)
+		ret = append(ret, item.point)
+	}
+	for i := len(ret)/2 - 1; i >= 0; i-- {
+		opp := len(ret) - 1 - i
+		ret[i], ret[opp] = ret[opp], ret[i]
+	}
+	return ret
+}
+
+func (t *KDTree) search(p *kdTreeNode,
+	hp *kNNHeapHelper, target Point, k int) {
+	stk := make([]*kdTreeNode, 0)
+	for p != nil {
+		stk = append(stk, p)
+		if target.GetValue(p.axis) < p.splittingPoint.GetValue(p.axis) {
+			p = p.leftChild
+		} else {
+			p = p.rightChild
+		}
+	}
+	for i := len(stk) - 1; i >= 0; i-- {
+		cur := stk[i]
+		dist := target.Distance(cur.splittingPoint)
+		if hp.Len() == 0 || (*hp)[0].distance > dist {
+			heap.Push(hp, &kNNHeapNode{
+				point:    cur.splittingPoint,
+				distance: dist,
+			})
+			if hp.Len() > k {
+				heap.Pop(hp)
+			}
+		}
+		if target.PlaneDistance(
+			cur.splittingPoint.GetValue(cur.axis), cur.axis) <
+			(*hp)[0].distance {
+			if target.GetValue(cur.axis) < cur.splittingPoint.GetValue(cur.axis) {
+				t.search(cur.rightChild, hp, target, k)
+			} else {
+				t.search(cur.leftChild, hp, target, k)
+			}
+		}
+	}
 }
 
 func NewKDTree(points []Point) *KDTree {
