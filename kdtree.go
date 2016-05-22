@@ -98,3 +98,30 @@ type kNNHeapNode struct {
 	point    Point
 	distance float64
 }
+
+type kNNHeapHelper []*kNNHeapNode
+
+func (h kNNHeapHelper) Len() int {
+	return len(h)
+}
+
+func (h kNNHeapHelper) Less(i, j int) bool {
+	return h[i].distance > h[j].distance
+}
+
+func (h kNNHeapHelper) Swap(i, j int) {
+	h[i], h[j] = h[j], h[i]
+}
+
+func (h *kNNHeapHelper) Push(x interface{}) {
+	item := x.(*kNNHeapNode)
+	*h = append(*h, item)
+}
+
+func (h *kNNHeapHelper) Pop() interface{} {
+	old := *h
+	n := len(old)
+	item := old[n-1]
+	*h = old[0 : n-1]
+	return item
+}
