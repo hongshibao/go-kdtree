@@ -13,6 +13,27 @@ type Point interface {
 	PlaneDistance(val float64, dim int) float64
 }
 
+type PointBase struct {
+	Point
+	Vec []float64
+}
+
+func (b PointBase) Dim() int {
+	return len(b.Vec)
+}
+
+func (b PointBase) GetValue(dim int) float64 {
+	return b.Vec[dim]
+}
+
+func NewPointBase(vals []float64) PointBase {
+	ret := PointBase{}
+	for _, val := range vals {
+		ret.Vec = append(ret.Vec, val)
+	}
+	return ret
+}
+
 type kdTreeNode struct {
 	axis           int
 	splittingPoint Point

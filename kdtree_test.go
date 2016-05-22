@@ -6,34 +6,26 @@ import (
 )
 
 type EuclideanPoint struct {
-	vec []float64
+	PointBase
 }
 
-func (p *EuclideanPoint) Dim() int {
-	return len(p.vec)
-}
-
-func (p *EuclideanPoint) GetValue(dim int) float64 {
-	return p.vec[dim]
-}
-
-func (p *EuclideanPoint) Distance(ep Point) float64 {
+func (p *EuclideanPoint) Distance(other Point) float64 {
 	var ret float64
-	for i := 0; i < len(p.vec); i++ {
-		tmp := p.GetValue(i) - ep.GetValue(i)
+	for i := 0; i < p.Dim(); i++ {
+		tmp := p.GetValue(i) - other.GetValue(i)
 		ret += tmp * tmp
 	}
 	return ret
 }
 
 func (p *EuclideanPoint) PlaneDistance(val float64, dim int) float64 {
-	tmp := p.vec[dim] - val
+	tmp := p.GetValue(dim) - val
 	return math.Abs(tmp)
 }
 
 func NewEuclideanPoint(vals ...float64) *EuclideanPoint {
 	ret := &EuclideanPoint{
-		vec: []float64(vals),
+		PointBase: NewPointBase(vals),
 	}
 	return ret
 }
@@ -103,5 +95,4 @@ func TestKNN(t *testing.T) {
 			t.Error("KNN results are wrong")
 		}
 	}
-
 }
