@@ -10,32 +10,58 @@ type Point interface {
 	Distance(p Point) float64
 }
 
+type kdTreeNode struct {
+	axis           int
+	splittingPoint Point
+	leftChild      *kdTreeNode
+	rightChild     *kdTreeNode
+}
+
+type KDTree struct {
+	root *kdTreeNode
+	dim  int
+}
+
+func (t *KDTree) Dim() int {
+	return t.dim
+}
+
+func (t *KDTree) KNN(k int) []Point {
+	// TODO
+	return nil
+}
+
 func NewKDTree(points []Point) *KDTree {
 	if len(points) == 0 {
 		return nil
 	}
 	ret := &KDTree{
-		dim: points[0].Dim(),
+		dim:  points[0].Dim(),
+		root: createKDTree(points, 0),
 	}
-	// TODO
 	return ret
 }
 
-func createKDTree(points []Point, depth int) *KDTreeNode {
+func createKDTree(points []Point, depth int) *kdTreeNode {
 	if len(points) == 0 {
 		return nil
 	}
 	dim := points[0].Dim()
-	if len(points) == 1 {
-		return &KDTreeNode{
-			axis:           depth % dim,
-			splittingPoint: points[0],
-			leftChild:      nil,
-			rightChild:     nil,
-		}
+	ret := &kdTreeNode{
+		axis: depth % dim,
 	}
-	// TODO
-	return nil
+	if len(points) == 1 {
+		ret.splittingPoint = points[0]
+		return ret
+	}
+	idx := selectSplittingPoint(points, ret.axis)
+	if idx == -1 {
+		return nil
+	}
+	ret.splittingPoint = points[idx]
+	ret.leftChild = createKDTree(points[0:idx-1], depth+1)
+	ret.rightChild = createKDTree(points[idx+1:len(points)], depth+1)
+	return ret
 }
 
 type selectionHelper struct {
@@ -55,7 +81,7 @@ func (h *selectionHelper) Swap(i, j int) {
 	h.points[i], h.points[j] = h.points[j], h.points[i]
 }
 
-func selectSplittingPoint(points []Point, axis int) Point {
+func selectSplittingPoint(points []Point, axis int) int {
 	helper := &selectionHelper{
 		axis:   axis,
 		points: points,
@@ -63,23 +89,12 @@ func selectSplittingPoint(points []Point, axis int) Point {
 	mid := len(points)/2 + 1
 	err := algo.QuickSelect(helper, mid)
 	if err != nil {
-		return nil
+		return -1
 	}
-	return points[mid-1]
+	return mid - 1
 }
 
-type KDTreeNode struct {
-	axis           int
-	splittingPoint Point
-	leftChild      *KDTreeNode
-	rightChild     *KDTreeNode
-}
-
-type KDTree struct {
-	root *KDTreeNode
-	dim  int
-}
-
-func (t *KDTree) Dim() int {
-	return t.dim
+type kNNHeapNode struct {
+	point    Point
+	distance float64
 }
