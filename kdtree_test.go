@@ -1,7 +1,6 @@
 package kdtree
 
 import (
-	"math"
 	"testing"
 )
 
@@ -20,7 +19,7 @@ func (p *EuclideanPoint) Distance(other Point) float64 {
 
 func (p *EuclideanPoint) PlaneDistance(val float64, dim int) float64 {
 	tmp := p.GetValue(dim) - val
-	return math.Abs(tmp)
+	return tmp * tmp
 }
 
 func NewEuclideanPoint(vals ...float64) *EuclideanPoint {
