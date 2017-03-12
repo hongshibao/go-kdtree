@@ -80,6 +80,13 @@ func main() {
 	tree := NewKDTree(points)
 	targetPoint := NewEuclideanPoint(0.0, 0.0, 0.1)
 	neighbours := tree.KNN(targetPoint, 2)
+	for idx, p := range neighbours {
+		fmt.Printf("Point %d: (%f", idx, p.GetValue(0))
+		for i := 1; i < p.Dim(); i++ {
+			fmt.Printf(", %f", p.GetValue(i))
+		}
+		fmt.Println(")")
+	}
 }
 ```
 The returned k nearest neighbours are sorted by their distance with the target point.
