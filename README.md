@@ -9,8 +9,9 @@ go get github.com/hongshibao/go-kdtree
 ```
 Then you can use it in import section of your Go programs:
 ```go
-go import "github.com/hongshibao/go-kdtree"
+import "github.com/hongshibao/go-kdtree"
 ```
+The package name is ```kdtree```.
 
 ## Basic example
 
