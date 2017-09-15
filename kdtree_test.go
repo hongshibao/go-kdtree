@@ -94,4 +94,35 @@ func TestKNN(t *testing.T) {
 			t.Error("KNN results are wrong")
 		}
 	}
+	// case 3
+	{
+		points := []Point{
+			NewEuclideanPoint(0.0, 0.0, 0.0),
+			NewEuclideanPoint(0.0, 0.0, 1.0),
+			NewEuclideanPoint(0.0, 1.0, 0.0),
+			NewEuclideanPoint(1.0, 0.0, 0.0),
+			NewEuclideanPoint(0.0, 0.0, 0.0),
+			NewEuclideanPoint(0.0, 0.0, 0.1),
+			NewEuclideanPoint(1.0, 1.0, 1.0),
+			NewEuclideanPoint(0.1, 0.1, 0.1),
+		}
+		tree := NewKDTree(points)
+		ans := tree.KNN(NewEuclideanPoint(0.0, 0.0, 0.0), 7)
+		if len(ans) != 7 {
+			t.Errorf("expected 7 points, actual: %v", len(ans))
+		}
+	}
+	// case 4
+	{
+		points := []Point{
+			NewEuclideanPoint(0.0, 0.0, 0.0),
+			NewEuclideanPoint(0.0, 0.0, 0.0),
+			NewEuclideanPoint(0.0, 0.0, 0.0),
+		}
+		tree := NewKDTree(points)
+		ans := tree.KNN(NewEuclideanPoint(0.0, 0.0, 0.0), 3)
+		if len(ans) != 3 {
+			t.Errorf("expected 3 points, actual: %v", len(ans))
+		}
+	}
 }

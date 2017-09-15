@@ -83,7 +83,7 @@ func (t *KDTree) search(p *kdTreeNode,
 	for i := len(stk) - 1; i >= 0; i-- {
 		cur := stk[i]
 		dist := target.Distance(cur.splittingPoint)
-		if hp.Len() == 0 || (*hp)[0].distance > dist {
+		if hp.Len() == 0 || (*hp)[0].distance >= dist {
 			heap.Push(hp, &kNNHeapNode{
 				point:    cur.splittingPoint,
 				distance: dist,
@@ -92,8 +92,8 @@ func (t *KDTree) search(p *kdTreeNode,
 				heap.Pop(hp)
 			}
 		}
-		if target.PlaneDistance(
-			cur.splittingPoint.GetValue(cur.axis), cur.axis) <
+		if hp.Len() < k || target.PlaneDistance(
+			cur.splittingPoint.GetValue(cur.axis), cur.axis) <=
 			(*hp)[0].distance {
 			if target.GetValue(cur.axis) < cur.splittingPoint.GetValue(cur.axis) {
 				t.search(cur.rightChild, hp, target, k)
