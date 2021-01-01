@@ -1,4 +1,7 @@
 # KDTree
+[![Maintainability](https://api.codeclimate.com/v1/badges/68ed481fb60be91970b8/maintainability)](https://codeclimate.com/github/hongshibao/go-kdtree/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/68ed481fb60be91970b8/test_coverage)](https://codeclimate.com/github/hongshibao/go-kdtree/test_coverage)
+
 Golang implementation of KD tree (https://en.wikipedia.org/wiki/K-d_tree) data structure
 
 ## Getting started
