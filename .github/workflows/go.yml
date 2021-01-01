@@ -32,5 +32,12 @@ jobs:
     - name: Build
       run: go build -v ./...
 
-    - name: Test
-      run: go test -v ./...
+    - name: Run unit test
+      run: |
+        go test -coverprofile c.out -race -v ./...
+        sed -i 's/github\.com\/hongshibao\/go\-kdtree\///g' c.out
+
+    - name: Report coverage
+      uses: paambaati/codeclimate-action@v2.7.5
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
