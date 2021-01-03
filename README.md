@@ -80,7 +80,7 @@ func main() {
 	points = append(points, p2)
 	points = append(points, p3)
 	points = append(points, p4)
-	tree := NewKDTree(points)
+	tree := kdtree.New(points)
 	targetPoint := NewEuclideanPoint(0.0, 0.0, 0.1)
 	neighbours := tree.KNN(targetPoint, 2)
 	for idx, p := range neighbours {
