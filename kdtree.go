@@ -6,6 +6,7 @@ import (
 	"github.com/hongshibao/go-algo"
 )
 
+// Point represents a point in a n-dimentional space with distance definition
 type Point interface {
 	// Return the total number of dimensions
 	Dim() int
@@ -17,19 +18,23 @@ type Point interface {
 	PlaneDistance(val float64, dim int) float64
 }
 
+// PointBase is an util base struct for Point
 type PointBase struct {
 	Point
 	Vec []float64
 }
 
+// Dim implements Dim in Point interface
 func (b PointBase) Dim() int {
 	return len(b.Vec)
 }
 
+// GetValue implements GetValue in Point interface
 func (b PointBase) GetValue(dim int) float64 {
 	return b.Vec[dim]
 }
 
+// NewPointBase creates a PointBase object
 func NewPointBase(vals []float64) PointBase {
 	ret := PointBase{}
 	for _, val := range vals {
@@ -45,15 +50,30 @@ type kdTreeNode struct {
 	rightChild     *kdTreeNode
 }
 
+// KDTree is the struct for KD Tree data structure
 type KDTree struct {
 	root *kdTreeNode
 	dim  int
 }
 
+// NewKDTree creates a new KDTree object
+func NewKDTree(points []Point) *KDTree {
+	if len(points) == 0 {
+		return nil
+	}
+	ret := &KDTree{
+		dim:  points[0].Dim(),
+		root: createKDTree(points, 0),
+	}
+	return ret
+}
+
+// Dim returns the number of dimensions
 func (t *KDTree) Dim() int {
 	return t.dim
 }
 
+// KNN returns k nearest neighbours of the target Point
 func (t *KDTree) KNN(target Point, k int) []Point {
 	hp := &kNNHeapHelper{}
 	t.search(t.root, hp, target, k)
@@ -104,17 +124,6 @@ func (t *KDTree) search(p *kdTreeNode,
 	}
 }
 
-func NewKDTree(points []Point) *KDTree {
-	if len(points) == 0 {
-		return nil
-	}
-	ret := &KDTree{
-		dim:  points[0].Dim(),
-		root: createKDTree(points, 0),
-	}
-	return ret
-}
-
 func createKDTree(points []Point, depth int) *kdTreeNode {
 	if len(points) == 0 {
 		return nil
@@ -133,7 +142,7 @@ func createKDTree(points []Point, depth int) *kdTreeNode {
 	}
 	ret.splittingPoint = points[idx]
 	ret.leftChild = createKDTree(points[0:idx], depth+1)
-	ret.rightChild = createKDTree(points[idx+1:len(points)], depth+1)
+	ret.rightChild = createKDTree(points[idx+1:], depth+1)
 	return ret
 }
 
