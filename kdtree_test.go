@@ -61,7 +61,7 @@ func TestKNN(t *testing.T) {
 		points = append(points, p2)
 		points = append(points, p3)
 		points = append(points, p4)
-		tree := NewKDTree(points)
+		tree := New(points)
 		ans := tree.KNN(NewEuclideanPoint(0.0, 0.0, 0.1), 2)
 		checkKNNResult(t, ans, p1, p2)
 	}
@@ -82,7 +82,7 @@ func TestKNN(t *testing.T) {
 		points = append(points, p5)
 		points = append(points, p6)
 		points = append(points, p7)
-		tree := NewKDTree(points)
+		tree := New(points)
 		ans := tree.KNN(NewEuclideanPoint(0.0, 0.0, 0.0), 3)
 		checkKNNResult(t, ans, p1, p5, p6)
 		ans = tree.KNN(NewEuclideanPoint(0.0, 0.0, 0.0), 4)
@@ -106,7 +106,7 @@ func TestKNN(t *testing.T) {
 			NewEuclideanPoint(1.0, 1.0, 1.0),
 			NewEuclideanPoint(0.1, 0.1, 0.1),
 		}
-		tree := NewKDTree(points)
+		tree := New(points)
 		ans := tree.KNN(NewEuclideanPoint(0.0, 0.0, 0.0), 7)
 		if len(ans) != 7 {
 			t.Errorf("expected 7 points, actual: %v", len(ans))
@@ -119,7 +119,7 @@ func TestKNN(t *testing.T) {
 			NewEuclideanPoint(0.0, 0.0, 0.0),
 			NewEuclideanPoint(0.0, 0.0, 0.0),
 		}
-		tree := NewKDTree(points)
+		tree := New(points)
 		ans := tree.KNN(NewEuclideanPoint(0.0, 0.0, 0.0), 3)
 		if len(ans) != 3 {
 			t.Errorf("expected 3 points, actual: %v", len(ans))

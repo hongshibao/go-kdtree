@@ -56,8 +56,8 @@ type KDTree struct {
 	dim  int
 }
 
-// NewKDTree creates a new KDTree object
-func NewKDTree(points []Point) *KDTree {
+// New creates a new KDTree object
+func New(points []Point) *KDTree {
 	if len(points) == 0 {
 		return nil
 	}
